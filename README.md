@@ -4,7 +4,7 @@ This repository contains reworked **libx1000**, that fixes the LOCK prefix segfa
 
 This version of **[libx1000](https://github.com/assa77/libx1000)** was developed by *[Alexander M. Albertian](mailto:assa@4ip.ru)*.
 
-Original version of **libx1000** was developed in 2015 by *[Ray Kinsella](mailto:ray.kinsella@intel.com)*.
+Original **libx1000** was developed in 2015 by *[Ray Kinsella](mailto:ray.kinsella@intel.com)*.
 
 You can see his blog for the [original description of libx1000](http://mdr78.github.io/x1000/2016/10/21/fixing-lock-prefix-on-x1000.html).
 
@@ -14,9 +14,9 @@ After much fun installing *Debian 7* (*Wheezy*) on an *Intel Galileo Gen 2* I wa
 ```
 login: segfault at b7173107 ip b714f07b sp bf97ea94 error ffff0007 in libpthread-2.13.so[b714a000+15000]
 ```
-The *X1000 SOC* used on the Intel Galileo’s suffers from a bug in it’s instruction set. It’s pretty well documented on *[Wikipedia](https://en.wikipedia.org/wiki/Intel_Quark#Segfault_bug")* and the *[Debian Bugzilla](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=738575")*. This is a particularly nasty bug in the *X1000 ISA*, that causes the preciding instruction to be re-executed when a the *LOCK* instruction prefix coincides with a page fault.
+The *X1000 SOC* used on the Intel Galileoâ€™s suffers from a bug in itâ€™s instruction set. Itâ€™s pretty well documented on *[Wikipedia](https://en.wikipedia.org/wiki/Intel_Quark#Segfault_bug")* and the *[Debian Bugzilla](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=738575")*. This is a particularly nasty bug in the *X1000 ISA*, that causes the preciding instruction to be re-executed when a the *LOCK* instruction prefix coincides with a page fault.
 
-The *LOCK* instruction itself is un-necessarily on the *X1000*, as it is a single core SOC and there are no other cores to signal with the *LOCK* prefix. The approach of distributions like Buildroot and Yocto is to strip the *LOCK* prefix during compile time with the *[-momit-lock-prefix](https://sourceware.org/ml/binutils/2014-08/msg00043.html)* argument to the assembler. This approach works fine for roll-your-own distributions like these, but doesn’t help much with trying to run *Debian* on the *Galileo*.
+The *LOCK* instruction itself is un-necessarily on the *X1000*, as it is a single core SOC and there are no other cores to signal with the *LOCK* prefix. The approach of distributions like Buildroot and Yocto is to strip the *LOCK* prefix during compile time with the *[-momit-lock-prefix](https://sourceware.org/ml/binutils/2014-08/msg00043.html)* argument to the assembler. This approach works fine for roll-your-own distributions like these, but doesnâ€™t help much with trying to run *Debian* on the *Galileo*.
 
 The approach adopted by *[UbiLinux](https://solutionsdirectory.intel.com/solutions-directory/ubilinux-debian-linux-intel%C2%AE-edison-and-intel%C2%AE-galileo-platforms)*, a *Debian Linux* derived distribution was to package their own glibc and pthread versions that where patched to remove the *LOCK* prefix. This model works fine also but I wanted to run *Debian* not a *Galileo* specific-derivative.
 
@@ -31,7 +31,7 @@ spinlock_t x = SPIN_LOCK_UNLOCKED;
 spin_lock(x);
 ...
 ```
-This holds for most variables on the stack and the heap, that we explicitly initialize them and fault them into memory before use (i.e. before they are *LOCK*’ed). However for variables that we decare and initalize globally these are typically faulted into memory initalized.
+This holds for most variables on the stack and the heap, that we explicitly initialize them and fault them into memory before use (i.e. before they are *LOCK*â€™ed). However for variables that we decare and initalize globally these are typically faulted into memory initalized.
 ```C
 spinlock_t x = SPIN_LOCK_UNLOCKED;
 
