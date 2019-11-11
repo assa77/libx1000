@@ -1,0 +1,51 @@
+#!/bin/sh
+# postinst script for libx100
+#
+# see: dh_installdeb(1)
+
+set -e
+
+# summary of how this script can be called:
+#        * <postinst> `configure' <most-recently-configured-version>
+#        * <old-postinst> `abort-upgrade' <new version>
+#        * <conflictor's-postinst> `abort-remove' `in-favour' <package>
+#          <new-version>
+#        * <postinst> `abort-remove'
+#        * <deconfigured's-postinst> `abort-deconfigure' `in-favour'
+#          <failed-install-package> <version> `removing'
+#          <conflicting-package> <version>
+# for details, see http://www.debian.org/doc/debian-policy/ or
+# the debian-policy package
+
+GRUB_CMDLINE_LINUX="console=ttyS1,115200n8 reboot=efi,warm"
+
+case "$1" in
+    configure)
+
+	# Load hook library to disable CoW and ensure pages are prefaulted.
+	echo "/usr/lib/|TRIPLET|/libx1000.so.0.0.0" >> /etc/ld.so.preload
+
+	# Disable swapping completely.
+	sed -i -e "s/^exit 0/swapoff -a\t#libx1000\nexit 0/g" /etc/rc.local
+
+	# Rebuild the runtime linker cache
+	ldconfig
+
+	sed -i -e "s/GRUB_CMDLINE_LINUX=\"\"/GRUB_CMDLINE_LINUX=\"$GRUB_CMDLINE_LINUX\"/g" /etc/default/grub
+	if [ $? = 0 ]
+	then
+	    # Update Grub
+	    update-grub
+	fi
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+    *)
+	echo "postinst called with unknown argument \`$1'" >&2
+	exit 1
+    ;;
+esac
+
+exit 0

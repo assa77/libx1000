@@ -1,0 +1,18 @@
+Source: libx1000
+Section: unknown
+Priority: optional
+Maintainer: Alexander M. Albertian <assa@4ip.ru>
+Build-Depends: debhelper (>= 9), autotools-dev
+Standards-Version: 3.9.5
+Homepage: https://github.com/assa77/libx1000
+Vcs-Git: https://github.com/assa77/libx1000.git
+Vcs-Browser: https://github.com/assa77/libx1000
+
+Package: libx1000
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Library loaded on application initialization by the runtime linker.
+ This library fixes the LOCK Prefix issus on the Intel X1000 by over-committing 
+ memory. This means that all memory including elf data-segments, CoW memory, 
+ ANONYMOUS maps etc are prefaulted on application initialization. This implies higher 
+ overall system memory utilization. 
